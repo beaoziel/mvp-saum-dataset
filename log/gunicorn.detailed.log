@@ -1,0 +1,20 @@
+[2023-12-10 22:02:56,723] INFO _log() L224  127.0.0.1 - - [10/Dec/2023 22:02:56] "[35m[1mPOST /developer/upload HTTP/1.1[0m" 500 - - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:05:22,364] INFO _log() L224   * Running on http://127.0.0.1:5000 (Press CTRL+C to quit) - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:05:24,549] ERROR log_exception() L1449 Exception on /developer/upload [POST] - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\flask\app.py L1449
+Traceback (most recent call last):
+  File "C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\flask\app.py", line 1520, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\flask\app.py", line 1539, in finalize_request
+    response = self.make_response(rv)
+  File "C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\flask\app.py", line 1730, in make_response
+    raise TypeError(
+TypeError: The view function did not return a valid response. The return type must be a string, dict, tuple, Response instance, or WSGI callable, but it was a set.
+[2023-12-10 22:05:24,552] INFO _log() L224  127.0.0.1 - - [10/Dec/2023 22:05:24] "[35m[1mPOST /developer/upload HTTP/1.1[0m" 500 - - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:05:45,332] INFO _log() L224   * Running on http://127.0.0.1:5000 (Press CTRL+C to quit) - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:05:46,446] INFO _log() L224  127.0.0.1 - - [10/Dec/2023 22:05:46] "POST /developer/upload HTTP/1.1" 200 - - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:15:45,332] INFO _log() L224  127.0.0.1 - - [10/Dec/2023 22:15:45] "POST /developer/upload HTTP/1.1" 200 - - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:19:30,335] INFO _log() L224  127.0.0.1 - - [10/Dec/2023 22:19:30] "GET /dataset/download HTTP/1.1" 200 - - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:19:56,078] INFO _log() L224  127.0.0.1 - - [10/Dec/2023 22:19:56] "POST /dataset/upload HTTP/1.1" 200 - - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
+[2023-12-10 22:20:05,899] INFO _log() L224  127.0.0.1 - - [10/Dec/2023 22:20:05] "POST /dataset/upload HTTP/1.1" 200 - - call_trace=C:\Users\biaoz\PycharmProjects\18-paiting-project\venv\lib\site-packages\werkzeug\_internal.py L224 
