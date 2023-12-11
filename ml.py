@@ -20,17 +20,17 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
-from sklearn import preprocessing
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestRegressor 
 
-# Informa a URL de importação do dataset
-url = "ObesityDataSet.csv"
+# Informa o Path do arquivo
+path = "ObesityDataSet.csv"
 
-# Lê o arquivo
-df = pd.read_csv(url, delimiter=",")
+# Realiza a leitura
+df = pd.read_csv(path, delimiter=",")
 
-# está tentando alimentar um modelo de machine learning com features que contêm valores não numéricos (como strings) e o modelo espera entradas numéricas.
+# Como o modelo de machine learning possui features que contêm valores não numéricos (como strings) e o modelo espera entradas numéricas.
+# Com o label encoder, vamos realizar essa conversão.
 label_encoder = LabelEncoder()
 df["Gender"] = label_encoder.fit_transform(df["Gender"])
 df["family_history_with_overweight"] = label_encoder.fit_transform(df["family_history_with_overweight"])
@@ -43,8 +43,7 @@ df["CALC"] = label_encoder.fit_transform(df["CALC"])
 df["MTRANS"] = label_encoder.fit_transform(df["MTRANS"])
 df["NObeyesdad"] = label_encoder.fit_transform(df["NObeyesdad"])
 
-
-# Mostra as primeiras linhas do dataset
+#Vamos ver os dados do dataframe.
 print(df.head())
 
 
@@ -52,9 +51,9 @@ test_size = 0.20  # tamanho do conjunto de teste, 20% do dataset
 seed = 7  # semente aleatória
 
 # Separação em conjuntos de treino e teste
-array = df.values
+array = df.values #definição do array como os valores do dataframe definidos anteriormente
 X = array[:, 0:16]  # atributos
-y = array[:, 16]  # classes
+y = array[:, 16]  # classes do modelo
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=test_size, shuffle=True, random_state=seed, stratify=y
 )  # holdout com estratificação
@@ -96,8 +95,7 @@ plt.boxplot(results)
 ax.set_xticklabels(names)
 plt.show()
 
-print("AAAAAAAAAAAAAAAAAAAA")
-
+#Inicio de uso de pipelines
 np.random.seed(7)  # definindo uma semente global para este bloco
 
 # Listas para armazenar os armazenar os pipelines e os resultados para todas as visões do dataset
@@ -159,70 +157,7 @@ plt.boxplot(results)
 ax.set_xticklabels(names, rotation=90)
 plt.show()
 
-np.random.seed(7)  # definindo uma semente global para este bloco
-
-# Listas para armazenar os armazenar os pipelines e os resultados para todas as visões do dataset
-pipelines = []
-results = []
-names = []
-
-
-# Criando os elementos do pipeline
-
-# Algoritmos que serão utilizados
-knn = ("KNN", KNeighborsClassifier())
-cart = ("CART", DecisionTreeClassifier())
-naive_bayes = ("NB", GaussianNB())
-svm = ("SVM", SVC())
-
-# Transformações que serão utilizadas
-standard_scaler = ("StandardScaler", StandardScaler())
-min_max_scaler = ("MinMaxScaler", MinMaxScaler())
-
-
-# Montando os pipelines
-
-# Dataset original
-pipelines.append(("KNN-orig", Pipeline([knn])))
-pipelines.append(("CART-orig", Pipeline([cart])))
-pipelines.append(("NB-orig", Pipeline([naive_bayes])))
-pipelines.append(("SVM-orig", Pipeline([svm])))
-
-# Dataset Padronizado
-pipelines.append(("KNN-padr", Pipeline([standard_scaler, knn])))
-pipelines.append(("CART-padr", Pipeline([standard_scaler, cart])))
-pipelines.append(("NB-padr", Pipeline([standard_scaler, naive_bayes])))
-pipelines.append(("SVM-padr", Pipeline([standard_scaler, svm])))
-
-# Dataset Normalizado
-pipelines.append(("KNN-norm", Pipeline([min_max_scaler, knn])))
-pipelines.append(("CART-norm", Pipeline([min_max_scaler, cart])))
-pipelines.append(("NB-norm", Pipeline([min_max_scaler, naive_bayes])))
-pipelines.append(("SVM-norm", Pipeline([min_max_scaler, svm])))
-
-# Executando os pipelines
-for name, model in pipelines:
-    cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring=scoring)
-    results.append(cv_results)
-    names.append(name)
-    msg = "%s: %.3f (%.3f)" % (
-        name,
-        cv_results.mean(),
-        cv_results.std(),
-    )  # formatando para 3 casas decimais
-    print(msg)
-
-# Boxplot de comparação dos modelos
-fig = plt.figure(figsize=(25, 6))
-fig.suptitle("Comparação dos Modelos - Dataset orginal, padronizado e normalizado")
-ax = fig.add_subplot(111)
-plt.boxplot(results)
-ax.set_xticklabels(names, rotation=90)
-plt.show()
-
-print("AAAAAAAAAAAAAAAAAAAA")
-
-# Tuning do KNN
+# Tuning do CART
 
 np.random.seed(7)  # definindo uma semente global para este bloco
 
@@ -262,18 +197,18 @@ for name, model in pipelines:
     )
 
 
-# Avaliação do modelo com o conjunto de testes
+# Avaliação do modelo com o conjunto de testes 
 
 # Preparação do modelo
 scaler = StandardScaler().fit(X_train)  # ajuste do scaler com o conjunto de treino
 rescaledX = scaler.transform(X_train)  # aplicação da padronização no conjunto de treino
-model = DecisionTreeClassifier(
+model = DecisionTreeClassifier( #aplicação dos parametros cart-norm
     ccp_alpha=0.001,
     criterion="entropy",
     max_depth=9,
     max_features="sqrt",
-    min_samples_leaf=4,
-    min_samples_split=10,
+    min_samples_leaf=2,
+    min_samples_split=5,
 )
 model.fit(rescaledX, y_train)
 
@@ -284,13 +219,8 @@ rescaledTestX = scaler.transform(
 predictions = model.predict(rescaledTestX)
 print(accuracy_score(y_test, predictions))
 
-
 regressor = RandomForestRegressor()
 regressor.fit(X_train, y_train)
-# # Preparação do modelo com TODO o dataset
-# scaler = StandardScaler().fit(X)  # ajuste do scaler com TODO o dataset
-# rescaledX = scaler.transform(X)  # aplicação da padronização com TODO o dataset
-# model.fit(rescaledX, y)
 
 # simulando
 data = {
@@ -312,6 +242,7 @@ data = {
     "MTRANS": ["Automobile"]
 }
 
+#Realizando a conversão dos dados com label encoder, ja definido anteriormente
 data["Gender"] = label_encoder.fit_transform(data["Gender"])
 data["family_history_with_overweight"] = label_encoder.fit_transform(
     data["family_history_with_overweight"])
@@ -340,10 +271,10 @@ atributos = [ "Gender",
     "CALC", #Consumption of alcohol | Sometimes no
     "MTRANS"] #Transportation used Public_T Automobile
 
-entrada = pd.DataFrame(data, columns=atributos)
+input = pd.DataFrame(data, columns=atributos)
 regressor.score(X_test, y_test)
 predictions = regressor.predict(X_test)
-array_entrada = entrada.values
+array_entrada = input.values
 X_entrada = array_entrada[:,0:16].astype(float)
 
 # Padronização nos dados de entrada usando o scaler utilizado em X

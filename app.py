@@ -8,8 +8,7 @@ from logger import logger
 from flask_cors import CORS
 from schemas import *
 from machinelearning import convert, prediction
-from cript import cript
-
+from cript import cript_code
 
 info = Info(title="APP Obesity SAUM", version="1.0.0")
 app = OpenAPI(__name__, info=info)
@@ -35,10 +34,10 @@ def get_excel():
         input_file = request.files['file']
         input_file.save('uploads/' + input_file.filename)
         pd.read_excel('uploads/' + input_file.filename)
-        result_input = convert.convertExcelToCsv('uploads/' + input_file.filename, input_file.filename)
+        result_input = convert.convert_excel_to_csv('uploads/' + input_file.filename, input_file.filename)
         if result_input[1] == 200:
-              user_result = prediction.predictInputData(result_input[0])
-              all_results = prediction.setMessage(str(user_result[0]))
+              user_result = prediction.predict_input_data(result_input[0])
+              all_results = prediction.set_message(str(user_result[0]))
               return {"group": all_results[0], "group_name": all_results[1], "text": all_results[2]}, 200
         else:
               error_msg = "Erro ao tratar arquivo Excel"
@@ -85,9 +84,8 @@ def get_new_dataset():
 def get_code():
      """Realiza a comparação do código informado para a liberação do download
     """
-     #sou_saum_dev!!
      input_value = request.form.get('input_value')
-     if cript.compare(input_value):
+     if cript_code.compare(input_value):
         return {"message": "Código informado corretamente"}, 200
      else:
         return {"message": "Codigo informado inválido"}, 403
