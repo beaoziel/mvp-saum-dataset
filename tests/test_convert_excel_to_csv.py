@@ -7,7 +7,7 @@ from machinelearning import convert
 
 def test_convert_excel_to_csv():
     assert convert.convert_excel_to_csv(
-        "C:/Users/biaoz/OneDrive/Documentos/mvp-oscar-dataset/uploads/template (5).xlsx",
+        "C:/Users/biaoz/OneDrive/Documentos/mvp-saum-dataset/uploads/template (5).xlsx",
         "template (5).xlsx",
     ) == (
         {

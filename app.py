@@ -38,16 +38,15 @@ def get_excel():
         if result_input[1] == 200:
               user_result = prediction.predict_input_data(result_input[0])
               all_results = prediction.set_message(str(user_result[0]))
-              return {"group": all_results[0], "group_name": all_results[1], "text": all_results[2]}, 200
+              return {"group": all_results[0], "group_name": all_results[1], "text": all_results[2], "status" : 200}
         else:
               error_msg = "Erro ao tratar arquivo Excel"
               logger.warning(f"Erro ao tratar arquivo Excel, {error_msg}")
-              return {"message": error_msg}, 400
-   
+              return {"message": error_msg, "status": 400}
      except Exception as e:
                 error_msg = "Não foi possível salvar arquivo"
                 logger.warning(f"Erro ao salvar e tratar arquivo Excel, {error_msg}")
-                return {"message": "Erro ao salvar e tratar arquivo Excel"}, 400
+                return {"message": "Erro ao salvar e tratar arquivo Excel", "status": 500}
      
 @app.get('/dataset/download', tags=[file_tag], responses={"200": FileSchema, "400": ErrorSchema})  
 def download_template():
@@ -74,11 +73,11 @@ def get_new_dataset():
         input_file = request.files['file']
         input_file.save('ObesityDataSet.csv')
         pd.read_csv('ObesityDataSet.csv')
-        return {"message": "Upload do novo dataset realizado com sucesso"}, 200
+        return {"message": "Upload do novo dataset realizado com sucesso", "status": 200}
     except Exception as e:
         error_msg = "Não foi possível o upload do novo dataset."
         logger.warning(f"Não foi possível o upload do novo dataset")
-        return {"message": error_msg}, 400
+        return {"message": error_msg, "status": 400}
 
 @app.post('/developer/code', tags=[file_tag], responses={"200": CodeSchema, "400": ErrorSchema})  
 def get_code():
@@ -86,6 +85,6 @@ def get_code():
     """
      input_value = request.form.get('input_value')
      if cript_code.compare(input_value):
-        return {"message": "Código informado corretamente"}, 200
+        return {"message": "Código informado corretamente", "status": 200}
      else:
-        return {"message": "Codigo informado inválido"}, 403
+        return {"message": "Codigo informado inválido", "status": 403}
